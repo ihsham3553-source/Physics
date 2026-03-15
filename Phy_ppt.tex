@@ -1,0 +1,71 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+
+\definecolor{mainblue}{RGB}{0, 102, 204}
+\hypersetup{colorlinks=true, linkcolor=mainblue, urlcolor=cyan}
+
+\title{\textbf{3D Orbital Mechanics \& Numerical Integration} \\ \large Grade 11 Physics 3rd Quarter Unified Project}
+\author{Section A: Groups 3 \& 8}
+\date{March 20, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\textbf{\large Prepared by Group Members:} \\[0.5cm]
+    \begin{tcolorbox}[colframe=mainblue, colback=white, width=0.8\textwidth, arc=2mm, boxrule=1pt]
+        \begin{enumerate}[label=\arabic*., nosep, leftmargin=3.5em]
+            \item Abenezer Kebede \item Elshaday Gashayeneh
+            \item Mikiyas Mesfin \item Moti Alemu
+            \item Negedeyesus Zewdu \item Tinsae Alebalchew
+            \item Yeabtsega Geletaw
+        \end{enumerate}
+    \end{tcolorbox}
+\end{center}
+
+\section{Introduction}
+This project investigates celestial trajectories through computational modeling. By utilizing Python's \texttt{vpython} module and the Euler method, we simulated satellite dynamics around Earth, focusing on circular, elliptical, and escape trajectories.
+
+\section{Physics Theory \& Numerical Method}
+The simulation is driven by Newton's Law of Universal Gravitation. We avoid pre-solved formulas and instead update the state of the satellite every $\Delta t = 10s$:
+\begin{equation}
+\vec{a} = - \frac{G M}{r^3} \vec{r}, \quad \vec{v}_{n+1} = \vec{v}_n + \vec{a}_n \Delta t, \quad \vec{r}_{n+1} = \vec{r}_n + \vec{v}_{n+1} \Delta t
+\end{equation}
+
+\section{Simulation Results}
+Below are the visual results of our simulation showing different orbital paths.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{IMG_20260315_144551_706.jpg}
+    \caption{Visual representation of a stable circular orbit.}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{IMG_20260315_144552_152.jpg}
+    \caption{Data analysis of velocity vs. distance during an elliptical orbit.}
+\end{figure}
+
+\section{Coding Challenges \& Troubleshooting}
+During the development of the Python script, our team encountered several significant technical hurdles:
+
+\begin{itemize}
+    \item \textbf{Numerical Instability (Energy Drift):} Initially, we used a large $\Delta t$. This caused the satellite to "gain" artificial energy at every step because Euler's method approximates a curve with a straight line. The result was a spiral orbit rather than a closed circle. We solved this by decreasing $\Delta t$ to 10 seconds.
+    \item \textbf{Vector Normalization Errors:} A common bug occurred when calculating the gravitational force direction. If the distance $r$ became zero (collision), the program would crash due to division by zero. We implemented a conditional check to stop the simulation upon impact.
+    \item \textbf{Coordinate System Alignment:} Aligning the 3D camera in VPython to track the satellite without it leaving the screen required adjusting the \texttt{scene.center} dynamically as the satellite moved.
+\end{itemize}
+
+\section{Reflective Analysis}
+Through this project, we learned that while theoretical physics gives us perfect equations, computational physics requires us to manage errors. The precision of our results was limited by the "Floating Point" accuracy of the computer, a challenge faced by real-world aerospace engineers at NASA and ESA.
+
+\end{document}
