@@ -30,7 +30,6 @@ scene.camera.axis = vec(0, 0, -R_EARTH * 4.5)
 # ------------------------------------------------------------------------------
 # COSMETICS: STARFIELD & EARTH (USING EMISSIVE SPHERES)
 # ------------------------------------------------------------------------------
-# Ripped directly from the Aethereus code so it actually renders in your browser!
 for _ in range(300):
     sphere(pos=vec(random()-0.5, random()-0.5, random()-0.5) * 4e8, 
            radius=random()*8e5, color=color.white, emissive=True)
@@ -46,7 +45,9 @@ sat = compound([sat_body, sat_panels], pos=vec(R_EARTH + 5000000, 0, 0),
 v_arrow = arrow(color=color.green, shaftwidth=R_EARTH/25)
 f_arrow = arrow(color=color.red, shaftwidth=R_EARTH/25)
 
-hud = label(pos=vec(0, R_EARTH * 3, 0), text="", box=False, color=color.white, height=15)
+# THE FIX: Bumped the Y-position from 20 to 120 so the text doesn't fall off the screen!
+hud = label(pixel_pos=True, pos=vec(20, 120, 0), text="", 
+            box=False, color=color.white, align='left', height=16, font='monospace')
 
 # ------------------------------------------------------------------------------
 # DUAL TELEMETRY GRAPHS
@@ -67,7 +68,7 @@ curve_vel = gcurve(graph=orbit_graph, color=color.magenta, label="Velocity (m/s)
 # ==============================================================================
 # 3. TRAJECTORY INITIALIZATION & UI LOGIC
 # ==============================================================================
-sim_state = {'t': 0, 'dt': 2.0, 'warp': 200, 'paused': False, 'camera_mode': 'Free'}
+sim_state = {'t': 0, 'dt': 2.0, 'warp': 200, 'paused': False, 'camera_mode': 'Free', 'traj': ''}
 
 def reset_simulation():
     sim_state['t'] = 0
@@ -88,7 +89,8 @@ def inject_circular(b):
     v_mag = sqrt((G * M_EARTH) / r_mag)
     sat.vel = vec(0, v_mag, 0)
     sat.trail_color = color.cyan
-    hud.text = "TRAJECTORY: CIRCULAR\nv = sqrt(GM/r)"
+    hud.color = color.cyan
+    sim_state['traj'] = "CIRCULAR"
 
 def inject_elliptical(b):
     reset_simulation()
@@ -96,15 +98,17 @@ def inject_elliptical(b):
     v_mag = sqrt((G * M_EARTH) / r_mag) * 1.2 
     sat.vel = vec(0, v_mag, 0)
     sat.trail_color = color.magenta
-    hud.text = "TRAJECTORY: ELLIPTICAL\nv > sqrt(GM/r)"
+    hud.color = color.magenta
+    sim_state['traj'] = "ELLIPTICAL"
 
 def inject_escape(b):
     reset_simulation()
     r_mag = mag(sat.pos)
     v_mag = sqrt(2 * G * M_EARTH / r_mag) * 1.05 
     sat.vel = vec(0, v_mag, 0)
-    sat.trail_color = color.red
-    hud.text = "TRAJECTORY: ESCAPE (HYPERBOLIC)\nv >= sqrt(2GM/r)"
+    sat.trail_color = color.orange
+    hud.color = color.orange
+    sim_state['traj'] = "ESCAPE (HYPERBOLIC)"
 
 def toggle_pause(b):
     sim_state['paused'] = not sim_state['paused']
@@ -126,7 +130,7 @@ button(text="Circular", bind=inject_circular, background=color.blue)
 scene.append_to_caption('  ')
 button(text="Elliptical", bind=inject_elliptical, background=color.purple)
 scene.append_to_caption('  ')
-button(text="Escape", bind=inject_escape, background=color.red)
+button(text="Escape", bind=inject_escape, background=color.orange)
 scene.append_to_caption('  |  ')
 button(text="PAUSE", bind=toggle_pause)
 scene.append_to_caption('  |  Camera Mode: ')
@@ -177,13 +181,17 @@ while True:
             scene.camera.pos = vec(4e7 * cos(angle), 1.5e7, 4e7 * sin(angle))
             scene.camera.axis = earth.pos - scene.camera.pos
             
-        # Update Dual Graphs
+        # Calculations for HUD and Graphs
         v_mag = mag(sat.vel)
         alt = r_mag - R_EARTH
         ke = 0.5 * v_mag**2
         pe = -(G * M_EARTH) / r_mag
         total_e = ke + pe
         
+        # Update Live HUD text
+        hud.text = "TRAJECTORY: " + sim_state['traj'] + "\nSPEED: " + str(round(v_mag/1000, 2)) + " km/s\nALTITUDE: " + str(round(alt/1000, 0)) + " km"
+        
+        # Update Dual Graphs
         if int(sim_state['t']) % 100 == 0:
             curve_ke.plot(sim_state['t'], ke)
             curve_pe.plot(sim_state['t'], pe)
@@ -192,7 +200,8 @@ while True:
             curve_alt.plot(sim_state['t'], alt)
             curve_vel.plot(sim_state['t'], v_mag * 1000)
             
+        # Impact Detection Warning
         if r_mag <= R_EARTH:
             sim_state['paused'] = True
-            hud.text = ">>> IMPACT DETECTED <<<"
             hud.color = color.red
+            hud.text = ">>> IMPACT DETECTED <<<\nTRAJECTORY TERMINATED"
