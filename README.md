@@ -1,7 +1,41 @@
-# 3D Simulation of Orbital Mechanics
+# 3D Orbital Mechanics Simulation
+**Grade 11 Unified Physics Project | St. John Baptist De La Salle**
 
-This project uses Python and VPython to create a small simulation that depicts a satellite's orbit around the Earth. The software uses gravity to calculate the satellite's motion step by step rather than a fixed orbit. Euler-Cromer integration is a numerical technique used to continuously update the satellite's position and velocity.
+This project simulates satellite trajectories around Earth using **Python (VPython)** and numerical integration (**Euler's Method**). It was developed to demonstrate the relationship between centripetal force, gravitational potential, and kinetic energy in various orbital states.
 
-The satellite travels in an egg-shaped orbit while Earth is positioned in the center of the simulation. A trail makes it simple to see the trajectory by displaying the orbit's path. Additionally, the program displays real-time data, such as the satellite's acceleration and speed, and plots kinetic and potential energy over time.
+---
 
-Our understanding of how physics simulations operate and how programming can depict actual physical motion has improved as a result of this project.
+## 🚀 Quick Links
+* **[Live Presentation Slides](https://www.overleaf.com/read/cbhzfkgmqkhh#30c073)**
+* **[Final Project Essay (PDF)](Project_Essay.pdf)**
+
+---
+
+## 🛰️ Project Overview
+The simulation calculates the instantaneous acceleration of a satellite using Newton's Law of Universal Gravitation:
+$$a = - \frac{GM}{r^2}$$
+Instead of using static geometric formulas, we update the velocity and position of the satellite frame-by-frame (Numerical Integration), allowing for dynamic orbit transitions.
+
+### Supported Orbit Types:
+1. **Circular:** Velocity ($v$) equals $\sqrt{GM/r}$.
+2. **Elliptical:** Velocity is between circular and escape velocity.
+3. **Escape:** Velocity exceeds $\sqrt{2GM/r}$.
+
+---
+
+## 🛠️ Installation & Usage
+1. Ensure you have Python installed.
+2. Install the VPython library: `pip install vpython`
+3. Run the simulation: `python satellite_simulation.py`
+
+---
+
+## 👥 Contributors (Groups 3 & 8)
+* Amanuel Wondesen, Dawit Mulugeta, Hizkel Melese, Kaleb Million, Kidus Dawit, Mikiyas Mesfin, Muhamed Jemal, Nawolin Tesema, Negedeyesus Zewdu, Wako Gutu, Yonatan Alemu, Yoseph Kiflu.
+
+---
+
+## 📄 Visual Evidence
+| Circular Orbit | Elliptical Orbit | Escape Trajectory |
+| :---: | :---: | :---: |
+| ![Circular](Circular.jpeg) | ![Elliptical](Eleptical.jpeg) | ![Escape](Escape.jpeg) |
