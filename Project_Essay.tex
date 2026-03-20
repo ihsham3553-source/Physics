@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \geometry{a4paper, margin=1in}
 \usepackage{graphicx}
@@ -57,4 +58,82 @@ By utilizing Python, specifically the \texttt{vpython} module, we developed a 3D
 The driving force behind our simulation is Newton's Law of Universal Gravitation, which states that every point mass attracts every other point mass with a force acting along the line intersecting both points. The gravitational force $\vec{F}_g$ exerted on a satellite of mass $m$ by a central body (Earth) of mass $M$ is given by:
 \begin{equation}
     \vec{F}_g = - \frac{G M m}{|\vec{r}|^2} \hat{r} = - \frac{G M m}{|\vec{r}|^3} \vec{r}
+\end{equation}
+Applying Newton's Second Law ($\vec{F} = m\vec{a}$), we find the instantaneous acceleration:
+\begin{equation}
+    \vec{a} = - \frac{G M}{|\vec{r}|^3} \vec{r}
+\end{equation}
+
+\subsection{Numerical Integration: Euler's Method}
+To simulate motion, we must compute the changing position and velocity over time. Because the acceleration changes continuously as the position $\vec{r}$ changes, standard kinematic equations fail. Instead, we use Euler's method, advancing the simulation over infinitesimally small time steps, $\Delta t$:
+\begin{align}
+    \vec{v}_{n+1} &= \vec{v}_n + \vec{a}_n \Delta t \\
+    \vec{r}_{n+1} &= \vec{r}_n + \vec{v}_{n+1} \Delta t
+\end{align}
+
+\subsection{The Importance of Time Step ($\Delta t$) and Stability}
+The accuracy of Euler's method heavily depends on the size of $\Delta t$. Because the method uses the instantaneous rate of change to approximate a curve, a large $\Delta t$ causes the calculated trajectory to overshoot the true path. This artificially injects energy into the system, leading to numerical instability. 
+
+\section{Simulation Results \& Interpretation}
+Our Python script successfully rendered three distinct orbital classes by varying the initial parameters of the satellite. 
+
+\begin{enumerate}
+    \item \textbf{Circular Orbit:} By setting the initial velocity to exactly $v = \sqrt{GM/r}$ perpendicular to the position vector, the satellite maintained a constant altitude and speed.
+    
+    \item \textbf{Elliptical Orbit:} When the initial velocity was set higher than the circular velocity but below the escape velocity, the orbit became eccentric, accelerating as it approached the perigee and decelerating at the apogee.
+    
+    \item \textbf{Escape Trajectory:} By imparting an initial velocity equal to or greater than the escape velocity ($v = \sqrt{2GM/r}$), the satellite broke free from Earth's gravitational bound.
+\end{enumerate}
+
+The physical meaning behind our simulation data reinforces the principle of Conservation of Mechanical Energy. The total energy ($E = K + U$) dictates the geometry of the orbit. By simply tweaking the initial velocity vector in our code, we observed profound changes in the system's macroscopic behavior.
+
+\section{Coding Challenges \& Troubleshooting}
+Translating analytical physics into a functioning Python script presented our team with technical hurdles:
+
+\begin{itemize}
+    \item \textbf{Energy Drift \& Numerical Instability:} Our initial tests used a large $\Delta t$, causing the satellite to slowly spiral outward. We mitigated this by reducing $\Delta t$, which drastically improved the conservation of mechanical energy.
+    \item \textbf{Division by Zero:} A common runtime crash occurred when calculating gravitational force if the magnitude of the distance $r$ became zero. We implemented a conditional check to register a collision and safely halt the simulation.
+    \item \textbf{3D Camera Alignment:} Managing the perspective in VPython was challenging. We solved this by dynamically updating the \texttt{scene.camera.follow} attribute.
+\end{itemize}
+
+\section{Reflective Analysis}
+This project served as a bridge between theoretical and computational physics. In a textbook, equations yield perfect answers. In contrast, computational physics forces us to digitize continuous time into discrete steps, introducing truncation errors. Furthermore, we learned about the limitations of hardware, specifically floating-point arithmetic errors. This highlights why rigorous error checking is vital in real-world aerospace engineering.
+
+\newpage
+\section{Project Links \& Resources}
+The complete Python source code for the VPython 3D visualization, alongside our presentation slides, can be accessed via the links below.
+
+\vspace{0.5cm}
+\begin{itemize}
+    \item \textbf{Public GitHub Code Repository:} \\
+    \url{https://github.com/ihsham3553-source/Physics}
+    
+    \vspace{0.3cm}
+    \item \textbf{LaTeX Beamer Presentation Slides (Overleaf):} \\
+    \url{https://www.overleaf.com/read/jzzzqvrjfgjr#352b24}
+\end{itemize}
+
+\vspace{1cm}
+
+\section{Visual Evidence}
+Below are screenshots generated directly from our computational model in GlowScript/VPython, demonstrating the different resulting trajectories based on our numerical integration loop.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Circular}
+    \caption{Simulation of a bound Circular Orbit, maintaining uniform altitude.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Eleptical}
+    \caption{Simulation of a bound Elliptical Orbit, demonstrating varying velocity and altitude.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Escape}
+    \caption{Simulation of an open Escape Trajectory, where kinetic energy overcomes the gravitational potential.}
+\end{figure}
+
 \end{document}
