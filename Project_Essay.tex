@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage[most]{tcolorbox}
+
+\setstretch{1.15}
+
+\definecolor{mainblue}{RGB}{0, 102, 204}
+\hypersetup{colorlinks=true, linkcolor=mainblue, urlcolor=mainblue}
+
+\title{\textbf{3rd Quarter Physics Orbit Simulation} \\ \Large Grade 11 Unified Project}
+\author{Section A: Groups 3 \& 8}
+\date{March 20, 2026}
+
+\begin{document}
+
+\maketitle
+
+\vspace{-0.5cm}
+\begin{center}
+\textbf{\large Prepared by Group Members:} \\[0.5cm]
+    \begin{tcolorbox}[colframe=mainblue, colback=white, width=0.85\textwidth, arc=2mm, boxrule=1pt]
+        \begin{enumerate}[label=\arabic*., nosep, leftmargin=3.5em, itemsep=0.15cm]
+            \item Amanuel Wondesen
+            \item Dawit Mulugeta Gebre
+            \item Hizkel Melese Dessie
+            \item Kaleb Million Bekele
+            \item Kidus Dawit Weldeyes
+            \item Mikiyas Mesfin Kebere
+            \item Muhamed Jemal Idris
+            \item Nawolin Tesema Borema
+            \item Negedeyesus Zewdu
+            \item Wako Gutu Gudina
+            \item Yonatan Alemu Bereka
+            \item Yoseph Kiflu Tafesse
+        \end{enumerate}
+    \end{tcolorbox}
+\end{center}
+
+\vspace{0.5cm}
+
+\section{Introduction}
+Analytical calculus provides an elegant framework for solving idealized physics problems by hand. However, real-world celestial mechanics often involves complex, nonlinear forces that cannot be easily resolved using standard algebraic kinematic formulas. The primary goal of this project is to model the complex dynamics of a satellite orbiting Earth using numerical integration. 
+
+By utilizing Python, specifically the \texttt{vpython} module, we developed a 3D visual simulation of orbital motion. Our investigation focuses on modeling three distinct celestial trajectories: circular orbits, elliptical orbits, and open escape trajectories. Rather than relying on pre-calculated paths, our simulation continuously updates the physics frame-by-frame, demonstrating how fundamental gravitational principles give rise to the diverse orbits observed in astrophysics.
+
+\section{Physics Theory \& Numerical Method}
+
+\subsection{Newton's Law of Universal Gravitation}
+The driving force behind our simulation is Newton's Law of Universal Gravitation, which states that every point mass attracts every other point mass with a force acting along the line intersecting both points. The gravitational force $\vec{F}_g$ exerted on a satellite of mass $m$ by a central body (Earth) of mass $M$ is given by:
+\begin{equation}
+    \vec{F}_g = - \frac{G M m}{|\vec{r}|^2} \hat{r} = - \frac{G M m}{|\vec{r}|^3} \vec{r}
+\end{document}
